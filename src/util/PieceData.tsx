@@ -3,6 +3,7 @@ class PieceData {
     this.x = x;
     this.y = y;
     this.content = content;
+    this.active = false;
   }
 
   getPosition(): [int, int] {
@@ -16,6 +17,28 @@ class PieceData {
   getContent(): JSX.Element {
     return this.content;
   }
+
+  activate(): null {
+    this.active = true;
+  }
+
+  move(x: number, y: number): null {
+    this.x = x;
+    this.y = y;
+    this.active = false;
+  }
+}
+
+export function getPieceBySquare(pieces: PieceData[], x: number, y: number) {
+  return pieces.filter((piece) => {
+    return piece.x == x && piece.y == y;
+  })[0];
+}
+
+export function getActivePiece(pieces: PieceData[]) {
+  return pieces.filter((piece) => {
+    return piece.active;
+  })[0];
 }
 
 export default PieceData;

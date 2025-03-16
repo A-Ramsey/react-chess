@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, createContext, useEffect } from "react";
 import Square from "./Square";
-import PieceData from "./util/PieceData";
+import PieceData, { getPieceBySquare, getActivePiece } from "./util/PieceData";
 
 interface Props {
   width: integer;
@@ -9,6 +9,9 @@ interface Props {
 
 function Board(props: Props) {
   const [pieces, setPieces] = useState([new PieceData(1, 0, <p>B</p>)]);
+  const [clickedSquare, setClickedSquare] = useState({ x: -1, y: -1 });
+  const [rerender, setRerender] = useState(0);
+
   function getRow(row: integer) {
     const squares = [];
 
@@ -24,17 +27,22 @@ function Board(props: Props) {
           key={x + "," + row}
           coloured={x % 2 == row % 2}
           piece={renderPiece}
+          x={x}
+          y={row}
+          squareClick={squareClick}
         />,
       );
     }
     return (
       <div
         className={`grid grid-flow-col grid-cols-${props.width} justify-center`}
+        key={row}
       >
         {squares}
       </div>
     );
   }
+
   function getSquares() {
     const rows = [];
     for (let y = 0; y < props.height; y++) {
@@ -42,11 +50,25 @@ function Board(props: Props) {
     }
     return rows;
   }
+
+  function squareClick(x: number, y: number) {
+    const piece = getPieceBySquare(pieces, x, y);
+    const activePiece = getActivePiece(pieces);
+
+    //used to trigger rerender
+    setClickedSquare({ x: x, y: y });
+
+    if (piece) {
+      piece.activate();
+    } else if (activePiece) {
+      activePiece.move(x, y);
+    }
+  }
+
   return (
     <>
-      <div className="">
-        <h1 className="">This is a chess board</h1>
-        {getSquares()}
+      <div className="flex items-center justify-center h-screen">
+        <div className="">{getSquares()}</div>
       </div>
     </>
   );
