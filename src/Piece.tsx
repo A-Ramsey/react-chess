@@ -10,10 +10,11 @@ function Piece(props: Props) {
   function clickHandler() {
     setMoveMode((mode) => !mode);
   }
+  console.log(props.data.getTeam().baseColor);
   return (
     <div
       onClick={clickHandler}
-      className={`rounded-full ${moveMode ? "bg-blue-500" : "bg-red-500"} text-center`}
+      className={`rounded-full ${moveMode ? props.data.getTeam().baseColor : props.data.getTeam().activeColor} text-center`}
     >
       {props.data.getContent()}
     </div>

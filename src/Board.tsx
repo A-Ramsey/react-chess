@@ -1,5 +1,6 @@
 import React, { useState, createContext, useEffect } from "react";
 import Square from "./Square";
+import Team from "./util/Team";
 import PieceData, { getPieceBySquare, getActivePiece } from "./util/PieceData";
 
 interface Props {
@@ -8,7 +9,10 @@ interface Props {
 }
 
 function Board(props: Props) {
-  const [pieces, setPieces] = useState([new PieceData(1, 0, <p>B</p>)]);
+  const [pieces, setPieces] = useState([
+    new Team([new PieceData(1, 0, <p>B</p>)], "bg-red-500", "bg-red-700"),
+    new Team([new PieceData(0, 1, <p>B</p>)], "bg-green-500", "bg-green-700"),
+  ]);
   const [clickedSquare, setClickedSquare] = useState({ x: -1, y: -1 });
   const [rerender, setRerender] = useState(0);
 
@@ -17,7 +21,7 @@ function Board(props: Props) {
 
     for (let x = 0; x < props.width; x++) {
       let renderPiece = false;
-      pieces.forEach((piece) => {
+      [].concat(...pieces.map((team) => team.pieces)).forEach((piece) => {
         if (piece.isPosition(x, row)) {
           renderPiece = piece;
         }
